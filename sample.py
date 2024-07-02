@@ -16,7 +16,7 @@ from diffusers.models import AutoencoderKL
 from download import find_model
 from models import DiT_models
 import argparse
-
+import os
 
 def main(args):
     # Setup PyTorch:
@@ -65,7 +65,26 @@ def main(args):
     samples = vae.decode(samples / 0.18215).sample
 
     # Save and display images:
-    save_image(samples, "sample.png", nrow=4, normalize=True, value_range=(-1, 1))
+    os.makedirs(os.path.join(args.resdir, "imgs"), exist_ok=True)
+    save_path = os.path.join(args.resdir, "imgs", "sample.png")
+    save_image(samples, save_path, nrow=4, normalize=True, value_range=(-1, 1))
+    print(f"Generated samples saved at: {save_path}")
+
+    # Save hyperparameters and tensor information to info.log:
+    info_log_path = os.path.join(args.resdir, "info.log")
+    with open(info_log_path, 'w') as f:
+        f.write(f"Hyperparameters:\n")
+        f.write(f"  Model: {args.model}\n")
+        f.write(f"  VAE: {args.vae}\n")
+        f.write(f"  Image Size: {args.image_size}\n")
+        f.write(f"  Number of Classes: {args.num_classes}\n")
+        f.write(f"  CFG Scale: {args.cfg_scale}\n\n")
+
+        f.write(f"Tensor shapes:\n")
+        f.write(f"  z shape: {z.shape}\n")
+        f.write(f"  samples shape: {samples.shape}\n")
+
+    print(f"Hyperparameters and tensor information saved at: {info_log_path}")
 
 
 if __name__ == "__main__":
@@ -79,5 +98,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--ckpt", type=str, default=None,
                         help="Optional path to a DiT checkpoint (default: auto-download a pre-trained DiT-XL/2 model).")
+    parser.add_argument("--resdir", type=str, default=".",
+                        help="Directory to save the results.")
     args = parser.parse_args()
     main(args)
