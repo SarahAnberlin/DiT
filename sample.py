@@ -19,6 +19,7 @@ import argparse
 import os
 
 def main(args):
+    print(os.getcwd())
     # Setup PyTorch:
     torch.manual_seed(args.seed)
     torch.set_grad_enabled(False)
