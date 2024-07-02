@@ -22,7 +22,8 @@ import os
 
 def main(args):
     os.makedirs(args.resdir, exist_ok=True)
-    print(os.chdir(args.resdir))
+    os.chdir(args.resdir)
+    print(os.getcwd())
     # Setup PyTorch:
     torch.manual_seed(args.seed)
     torch.set_grad_enabled(False)
