@@ -19,7 +19,7 @@ import argparse
 import os
 
 def main(args):
-    print(os.getcwd())
+    print(os.chdir(args.resdir))
     # Setup PyTorch:
     torch.manual_seed(args.seed)
     torch.set_grad_enabled(False)
