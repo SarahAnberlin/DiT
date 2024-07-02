@@ -8,6 +8,7 @@
 Sample new images from a pre-trained DiT.
 """
 import torch
+
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 from torchvision.utils import save_image
@@ -18,7 +19,9 @@ from models import DiT_models
 import argparse
 import os
 
+
 def main(args):
+    os.makedirs(args.resdir, exist_ok=True)
     print(os.chdir(args.resdir))
     # Setup PyTorch:
     torch.manual_seed(args.seed)
